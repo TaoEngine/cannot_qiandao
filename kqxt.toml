@@ -1,0 +1,27 @@
+title = "安工大晚寝签到插件"
+author = "流221汪涛"
+logindescription = "安工大的考勤系统密码默认为Ahgydx@920，没改过密码就填这个"
+
+[GetToken]
+url = "https://xskq.ahut.edu.cn/api/flySource-auth/oauth/token"
+method = "POST"
+head = {Content-Type = "application/x-www-form-urlencoded", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU="}
+body = {tenantId = "000000", username = "{{userid}}", password = "{{password}}", type = "account", grant_type = "password", scope = "all"}
+query = {}
+expect = {token = "refresh_token", username = "userName"}
+
+[Fence]
+url = "https://xskq.ahut.edu.cn/api/flySource-yxgl/dormSignTask/getTaskByIdForApp"
+method = "GET"
+head = {Content-Type = "application/json;charset=UTF-8", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
+body = {}
+query = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592"}
+expect = {success = "success", fence_latitude = "data.dormitoryRegisterVO.locationLat", fence_longitude = "data.dormitoryRegisterVO.locationLng"}
+
+[QianDao]
+url = "https://xskq.ahut.edu.cn/api/flySource-yxgl/dormSignRecord/add"
+method = "POST"
+head = {Content-Type = "application/json;charset=UTF-8", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
+body = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}", signTime = "{{nowtime}}", signWeek = "{{nowweek}}", signLat = "{{latitude}}", signLng = "{{longitude}}", locationAccuracy = "{{accuracy}}"}
+query = {}
+expect = {success = "success"}
