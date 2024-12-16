@@ -1,7 +1,7 @@
 name: cannot_qiandao
 description: "没必要签到APP，安工大第三方签到APP"
 publish_to: 'none'
-version: 0.0.1
+version: 0.0.3
 
 environment:
   sdk: ^3.5.4
@@ -17,6 +17,8 @@ dependencies:
     sdk: flutter
   url_launcher: ^6.3.1
   toml: ^0.16.0
+  http: ^1.2.2
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:

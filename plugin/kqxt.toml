@@ -1,0 +1,36 @@
+title = "安工大晚寝签到插件"
+author = "流221汪涛"
+logindescription = "安工大的考勤系统密码默认为Ahgydx@920，没改过密码就填这个"
+
+# 获取签到操作所需的用户凭证Token
+[GetToken]
+url = "https://xskq.ahut.edu.cn/api/flySource-auth/oauth/token"
+method = "POST"
+head = {Content-Type = "application/x-www-form-urlencoded", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU="}
+body = {tenantId = "000000", username = "{{userid}}", password = "{{password}}", type = "account", grant_type = "password", scope = "all"}
+query = {}
+expect = {token = "refresh_token", username = "userName"}
+
+[State]
+url = "https://xskq.ahut.edu.cn/api/flySource-yxgl/dormSignRecord/getOne"
+method = "GET"
+head = {Content-Type = "application/x-www-form-urlencoded", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
+body = {}
+query = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}", taskType = "1"}
+expect = {success = "success", state = "signStatusName"}
+
+[Fence]
+url = "https://xskq.ahut.edu.cn/api/flySource-yxgl/dormSignTask/getTaskByIdForApp"
+method = "GET"
+head = {Content-Type = "application/x-www-form-urlencoded", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
+body = {}
+query = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}"}
+expect = {success = "success", fence_latitude = "data.dormitoryRegisterVO.locationLat", fence_longitude = "data.dormitoryRegisterVO.locationLng"}
+
+[QianDao]
+url = "https://xskq.ahut.edu.cn/api/flySource-yxgl/dormSignRecord/add"
+method = "POST"
+head = {Content-Type = "application/x-www-form-urlencoded", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
+body = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}", signTime = "{{nowtime}}", signWeek = "{{nowweek}}", signLat = "{{latitude}}", signLng = "{{longitude}}", locationAccuracy = "{{accuracy}}"}
+query = {}
+expect = {success = "success"}
