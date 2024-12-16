@@ -1,3 +1,4 @@
+import 'package:cannot_qiandao/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cannot_qiandao/widgets/settingscard.dart';
@@ -16,21 +17,33 @@ class _SettingsPageState extends State<SettingsPage> {
   /// 存放配置的数据库
   final MMKV _configDB = MMKV("configDB");
 
+  /// 存放登录的数据库
+  final MMKV _loginDB = MMKV("loginDB");
+
   /// 规则URL，用于同步签到规则
   String _sourceURL = "";
+
+  /// 登录的姓名
+  String? _userName;
+
+  /// 登录的ID
+  String? _id;
 
   /// 是否允许虚拟位置签到
   bool _switchVirtualQianDao = false;
 
-  /// 给规则URL的dialog用的
-  TextEditingController _fieldController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
-    _sourceURL = _configDB.decodeString("sourceURL") ?? "";
-    _switchVirtualQianDao = _configDB.decodeBool("switchVirtualQianDao");
-    _fieldController = TextEditingController(text: _sourceURL);
+    _configDB.decodeString("SourceURL") ??
+        _configDB.encodeString(
+          "SourceURL",
+          "https://raw.githubusercontent.com/TaoEngine/cannot_qiandao/main/plugin/kqxt.toml",
+        );
+    _sourceURL = _configDB.decodeString("SourceURL")!;
+    _userName = _loginDB.decodeString("UserName");
+    _id = _loginDB.decodeString("UserID");
+    _switchVirtualQianDao = _configDB.decodeBool("SwitchVirtualQianDao");
   }
 
   @override
@@ -47,7 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
               launchUrl(Uri(
                 scheme: 'https',
                 host: 'github.com',
-                path: 'TaoEngine',
+                path: 'TaoEngine/cannot_qiandao',
               ));
             },
             icon: const Icon(Icons.arrow_forward),
@@ -59,12 +72,15 @@ class _SettingsPageState extends State<SettingsPage> {
           thistitle: "填入签到规则URL",
           thissubtitle: "当前为$_sourceURL",
           trailingWidget: IconButton.outlined(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (builder) => _urldialog(),
-              );
-            },
+            onPressed: () => showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (builder) => URLDialog(
+                onEditFunction: () => setState(() {
+                  _sourceURL = _configDB.decodeString("SourceURL")!;
+                }),
+              ),
+            ),
             icon: const Icon(Icons.edit),
           ),
         ),
@@ -72,9 +88,40 @@ class _SettingsPageState extends State<SettingsPage> {
           isImportant: false,
           leadingIcon: const Icon(Icons.login),
           thistitle: "输入登录信息",
-          thissubtitle: "229094246汪涛已登录",
+          thissubtitle: _id != null && _userName != null
+              ? "$_id($_userName) 已登录"
+              : "请先登录",
           trailingWidget: IconButton.outlined(
-            onPressed: () {},
+            onPressed: () => showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (builder) => UserDialog(
+                onEditFunction: () => setState(() {
+                  _userName = _loginDB.decodeString("UserName");
+                  _id = _loginDB.decodeString("UserID");
+                }),
+                onSaveFunction: () => setState(() {
+                  _userName = _loginDB.decodeString("UserName");
+                  _id = _loginDB.decodeString("UserID");
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("$_userName,欢迎回来!"),
+                      behavior: SnackBarBehavior.floating));
+                }),
+                onErrorFunction: (error) => showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("出错了"),
+                    content: Text(error.toString().split(":").last),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("返回"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             icon: const Icon(Icons.edit),
           ),
         ),
@@ -85,15 +132,16 @@ class _SettingsPageState extends State<SettingsPage> {
           thissubtitle: "仅为本人学习研究",
           trailingWidget: Switch(
             value: _switchVirtualQianDao,
-            onChanged: (value) {
-              _switchVirtualQianDao = value;
-              setState(() {
-                _configDB.encodeBool(
-                  "switchVirtualQianDao",
-                  _switchVirtualQianDao,
-                );
-              });
-            },
+            // onChanged: (value) {
+            //   _switchVirtualQianDao = value;
+            //   setState(() {
+            //     _configDB.encodeBool(
+            //       "switchVirtualQianDao",
+            //       _switchVirtualQianDao,
+            //     );
+            //   });
+            // },
+            onChanged: null,
           ),
         ),
         SettingsCard(
@@ -110,35 +158,6 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             icon: const Icon(Icons.arrow_forward),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _urldialog() {
-    return AlertDialog(
-      icon: const Icon(Icons.power),
-      title: const Text('规则URL'),
-      content: const Text(
-          '规则就像插件，和软件主体是分开的，这样可以灵活应对签到系统突发的更改\n规则将在APP启动时更新一次\n规则由TOML编写，有感兴趣的友友们可以和我一起交流哦！'),
-      actions: [
-        TextField(
-          controller: _fieldController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: '输入存放规则的URL',
-          ),
-          onChanged: (value) {
-            setState(() {
-              _sourceURL = value;
-              _configDB.encodeString("sourceURL", _sourceURL);
-            });
-          },
-        ),
-        const SizedBox(height: 16),
-        TextButton(
-          onPressed: _sourceURL.isEmpty ? null : () => Navigator.pop(context),
-          child: const Text('关闭'),
         ),
       ],
     );
