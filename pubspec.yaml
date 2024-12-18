@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   crypto: ^3.0.5
+  isar: ^3.1.0+1
+  path_provider: ^2.1.5
   mmkv: ^2.0.1
   quick_actions: ^1.0.8
   dynamic_color: ^1.7.0
@@ -24,6 +26,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  build_runner: ^2.4.13
+  isar_generator: ^3.1.0+1
 
 flutter:
   uses-material-design: true

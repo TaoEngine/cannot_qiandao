@@ -11,26 +11,29 @@ body = {tenantId = "000000", username = "{{userid}}", password = "{{password}}",
 query = {}
 expect = {token = "refresh_token", username = "userName"}
 
-[State]
+# 获取今日签到的状态,是签到了还是没签到
+[LoadState]
 url = "https://xskq.ahut.edu.cn/api/flySource-yxgl/dormSignRecord/getOne"
 method = "GET"
-head = {Content-Type = "application/x-www-form-urlencoded", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
+head = {Content-Type = "application/json;charset=UTF-8", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
 body = {}
 query = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}", taskType = "1"}
-expect = {success = "success", state = "signStatusName"}
+expect = {state = "data.signStatusName"}
 
-[Fence]
+# 获取学校的签到任务,如签到时间,签到位置
+[LoadTask]
 url = "https://xskq.ahut.edu.cn/api/flySource-yxgl/dormSignTask/getTaskByIdForApp"
 method = "GET"
-head = {Content-Type = "application/x-www-form-urlencoded", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
+head = {Content-Type = "application/json;charset=UTF-8", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
 body = {}
 query = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}"}
-expect = {success = "success", fence_latitude = "data.dormitoryRegisterVO.locationLat", fence_longitude = "data.dormitoryRegisterVO.locationLng"}
+expect = {fence_latitude = "data.dormitoryRegisterVO.locationLat", fence_longitude = "data.dormitoryRegisterVO.locationLng"}
 
+# 签到API
 [QianDao]
 url = "https://xskq.ahut.edu.cn/api/flySource-yxgl/dormSignRecord/add"
 method = "POST"
-head = {Content-Type = "application/x-www-form-urlencoded", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
+head = {Content-Type = "application/json;charset=UTF-8", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
 body = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}", signTime = "{{nowtime}}", signWeek = "{{nowweek}}", signLat = "{{latitude}}", signLng = "{{longitude}}", locationAccuracy = "{{accuracy}}"}
 query = {}
-expect = {success = "success"}
+expect = {success = "data"}

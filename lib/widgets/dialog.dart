@@ -1,3 +1,5 @@
+import 'package:cannot_qiandao/func/plugin.dart';
+import 'package:cannot_qiandao/func/qiandao.dart';
 import 'package:cannot_qiandao/func/requests.dart';
 import 'package:flutter/material.dart';
 import 'package:mmkv/mmkv.dart';
@@ -128,7 +130,7 @@ class _UserDialogState extends State<UserDialog> {
   void initState() {
     super.initState();
     try {
-      _qiandaoPlugin.loadPlugin();
+      _qiandaoPlugin.loadPlugin("");
       _userid = _loginDB.decodeString("UserID");
       _idController = TextEditingController(text: _userid);
       _passwordpast = _loginDB.decodeString("PasswordMD5");
