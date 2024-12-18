@@ -1,3 +1,4 @@
+import 'package:cannot_qiandao/func/plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -6,10 +7,10 @@ import 'package:cannot_qiandao/pages/settings.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:mmkv/mmkv.dart';
 
 void main() async {
-  await MMKV.initialize();
+  Plugin initPlugin = Plugin();
+  await initPlugin.init();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

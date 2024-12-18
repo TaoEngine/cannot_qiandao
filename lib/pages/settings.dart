@@ -1,10 +1,10 @@
+import 'package:cannot_qiandao/func/plugin.dart';
 import 'package:cannot_qiandao/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cannot_qiandao/widgets/settingscard.dart';
 
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mmkv/mmkv.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -14,11 +14,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  /// 存放配置的数据库
-  final MMKV _configDB = MMKV("configDB");
-
-  /// 存放登录的数据库
-  final MMKV _loginDB = MMKV("loginDB");
+  /// 签到插件
+  final Plugin plugin = Plugin();
 
   /// 规则URL，用于同步签到规则
   String _sourceURL = "";
@@ -35,15 +32,10 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    _configDB.decodeString("SourceURL") ??
-        _configDB.encodeString(
-          "SourceURL",
-          "https://raw.githubusercontent.com/TaoEngine/cannot_qiandao/main/plugin/kqxt.toml",
-        );
-    _sourceURL = _configDB.decodeString("SourceURL")!;
-    _userName = _loginDB.decodeString("UserName");
-    _id = _loginDB.decodeString("UserID");
-    _switchVirtualQianDao = _configDB.decodeBool("SwitchVirtualQianDao");
+    _sourceURL = plugin.getpluginURL();
+    _userName = plugin.getusername();
+    _id = plugin.getuserid();
+    _switchVirtualQianDao = false;
   }
 
   @override
@@ -76,9 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
               context: context,
               barrierDismissible: false,
               builder: (builder) => URLDialog(
-                onEditFunction: () => setState(() {
-                  _sourceURL = _configDB.decodeString("SourceURL")!;
-                }),
+                onEditFunction: () => setState(() {}),
               ),
             ),
             icon: const Icon(Icons.edit),
@@ -96,13 +86,8 @@ class _SettingsPageState extends State<SettingsPage> {
               context: context,
               barrierDismissible: false,
               builder: (builder) => UserDialog(
-                onEditFunction: () => setState(() {
-                  _userName = _loginDB.decodeString("UserName");
-                  _id = _loginDB.decodeString("UserID");
-                }),
+                onEditFunction: () => setState(() {}),
                 onSaveFunction: () => setState(() {
-                  _userName = _loginDB.decodeString("UserName");
-                  _id = _loginDB.decodeString("UserID");
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text("$_userName,欢迎回来!"),
                       behavior: SnackBarBehavior.floating));

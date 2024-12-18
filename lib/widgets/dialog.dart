@@ -1,8 +1,5 @@
 import 'package:cannot_qiandao/func/plugin.dart';
-import 'package:cannot_qiandao/func/qiandao.dart';
-import 'package:cannot_qiandao/func/requests.dart';
 import 'package:flutter/material.dart';
-import 'package:mmkv/mmkv.dart';
 
 class URLDialog extends StatefulWidget {
   final Function onEditFunction;
@@ -21,20 +18,19 @@ class _URLDialogState extends State<URLDialog> {
   /// 同步规则URL输入框的信息
   late TextEditingController _urlController;
 
-  /// 存放配置的数据库
-  final MMKV _configDB = MMKV("configDB");
+  /// 签到插件
+  final Plugin plugin = Plugin();
 
   @override
   void initState() {
     super.initState();
-    _sourceURL = _configDB.decodeString("SourceURL") ?? "";
+    _sourceURL = "";
     _urlController = TextEditingController(text: _sourceURL);
   }
 
   void _updateSourceURL(String value) {
     setState(() {
       _sourceURL = value;
-      _configDB.encodeString("SourceURL", _sourceURL);
       widget.onEditFunction();
     });
   }
@@ -120,20 +116,14 @@ class _UserDialogState extends State<UserDialog> {
   /// 给登录id的dialog用的
   TextEditingController _idController = TextEditingController();
 
-  /// 调用签到插件
-  final QiandaoPlugin _qiandaoPlugin = QiandaoPlugin();
-
-  /// 存放登录的数据库
-  final MMKV _loginDB = MMKV("loginDB");
+  /// 签到插件
+  final Plugin plugin = Plugin();
 
   @override
   void initState() {
     super.initState();
     try {
-      _qiandaoPlugin.loadPlugin("");
-      _userid = _loginDB.decodeString("UserID");
       _idController = TextEditingController(text: _userid);
-      _passwordpast = _loginDB.decodeString("PasswordMD5");
     } catch (error) {
       Navigator.pop(context);
       widget.onErrorFunction(error);
@@ -158,7 +148,6 @@ class _UserDialogState extends State<UserDialog> {
           onChanged: (value) {
             setState(() {
               _userid = value;
-              _loginDB.encodeString("UserID", _userid);
               widget.onEditFunction();
             });
           },
@@ -190,24 +179,6 @@ class _UserDialogState extends State<UserDialog> {
                   setState(() {
                     _isLogging = true;
                   });
-                  // 更新密码
-                  final passwordmd5 = toMD5(_password!);
-                  _loginDB.encodeString("PasswordMD5", passwordmd5);
-                  try {
-                    await _qiandaoPlugin.loadToken(loadName: "GetToken");
-                    setState(() {
-                      _isLogging = false;
-                      Navigator.pop(context);
-                      widget.onSaveFunction();
-                    });
-                  } catch (error) {
-                    // 密码回滚
-                    _loginDB.encodeString("PasswordMD5", _passwordpast);
-                    setState(() {
-                      _isLogging = false;
-                      widget.onErrorFunction(error);
-                    });
-                  }
                 },
           child: _isLogging
               ? const CircularProgressIndicator.adaptive()
