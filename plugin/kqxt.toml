@@ -34,6 +34,6 @@ expect = {fence_latitude = "data.dormitoryRegisterVO.locationLat", fence_longitu
 url = "https://xskq.ahut.edu.cn/api/flySource-yxgl/dormSignRecord/add"
 method = "POST"
 head = {Content-Type = "application/json;charset=UTF-8", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
-body = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}", signTime = "{{nowtime}}", signWeek = "{{nowweek}}", signLat = "{{latitude}}", signLng = "{{longitude}}", locationAccuracy = "{{accuracy}}"}
+body = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}", signTime = "{{nowtime}}", signWeek = "{{nowweek}}", signLat = "{{nowlatitude}}", signLng = "{{nowlongitude}}", locationAccuracy = "{{nowaccuracy}}"}
 query = {}
 expect = {success = "data"}

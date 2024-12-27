@@ -1,4 +1,4 @@
-import 'package:cannot_qiandao/func/plugin.dart';
+import 'package:cannot_qiandao/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,8 +9,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 
 void main() async {
-  Plugin initPlugin = Plugin();
-  await initPlugin.init();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -59,39 +57,42 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  /// 页面切换器，用于切换页面
-  List<Widget> appPage = [
-    const QiandaoPage(),
-    const SettingsPage(),
-  ];
-
-  /// 监听底部导航栏按到了哪一个
-  int naviCounter = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: appPage[naviCounter],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: naviCounter,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.task_alt),
-            selectedIcon: Icon(Icons.check_circle),
-            label: '去签到',
+      appBar: AppBar(
+        title: const Text("没必要签到"),
+        actions: [
+          // 登录按钮
+          IconButton(
+            onPressed: () => showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (builder) => const UserDialog(),
+            ),
+            icon: const Icon(Icons.login),
+            tooltip: "登录",
           ),
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
-            label: '调设置',
+          // 编辑按钮
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.edit),
+            tooltip: "编辑",
+          ),
+          // 设置按钮
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) {
+                return const SettingsPage();
+              }),
+            ),
+            icon: const Icon(Icons.settings),
+            tooltip: "设置",
           ),
         ],
-        onDestinationSelected: (value) {
-          setState(() {
-            naviCounter = value;
-          });
-        },
       ),
+      body: const QiandaoPage(),
     );
   }
 }

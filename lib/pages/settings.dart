@@ -1,10 +1,8 @@
-import 'package:cannot_qiandao/func/plugin.dart';
-import 'package:cannot_qiandao/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
-import 'package:cannot_qiandao/widgets/settingscard.dart';
-
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:cannot_qiandao/widgets/dialog.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -14,135 +12,88 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  /// 签到插件
-  final Plugin plugin = Plugin();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("调下设置"),
+      ),
+      body: const SettingsView(),
+    );
+  }
+}
 
-  /// 规则URL，用于同步签到规则
-  String _sourceURL = "";
-
-  /// 登录的姓名
-  String? _userName;
-
-  /// 登录的ID
-  String? _id;
-
-  /// 是否允许虚拟位置签到
-  bool _switchVirtualQianDao = false;
+class SettingsView extends StatefulWidget {
+  const SettingsView({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    _sourceURL = plugin.getpluginURL();
-    _userName = plugin.getusername();
-    _id = plugin.getuserid();
-    _switchVirtualQianDao = false;
-  }
+  State<SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends State<SettingsView> {
+  bool _ignorelocation = false;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        SettingsCard(
-          isImportant: true,
-          leadingIcon: const Icon(Icons.star),
-          thistitle: "去我的Github上狠狠的赞一个",
-          thissubtitle: "流221汪涛出品，必属精品",
-          trailingWidget: IconButton.outlined(
-            onPressed: () {
-              launchUrl(Uri(
-                scheme: 'https',
-                host: 'github.com',
-                path: 'TaoEngine/cannot_qiandao',
-              ));
-            },
-            icon: const Icon(Icons.arrow_forward),
+        ListTile(
+          leading: const Icon(Icons.star),
+          title: const Text("去我的Github上狠狠的赞一个"),
+          subtitle: const Text("TaoEngine出品，那必属精品啊!"),
+          onTap: () => launchUrl(
+            Uri.parse("https://github.com/TaoEngine/cannot_qiandao"),
           ),
         ),
-        SettingsCard(
-          isImportant: false,
-          leadingIcon: const Icon(Icons.power),
-          thistitle: "填入签到规则URL",
-          thissubtitle: "当前为$_sourceURL",
-          trailingWidget: IconButton.outlined(
-            onPressed: () => showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (builder) => URLDialog(
-                onEditFunction: () => setState(() {}),
-              ),
+        const Divider(),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            top: 8,
+            bottom: 8,
+          ),
+          child: Text(
+            "插件设置",
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.link),
+          title: const Text("编辑签到插件的URL"),
+          subtitle: const Text("签到的核心就靠它了!"),
+          onTap: () => showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (builder) => const ErrorDialog(
+              errorcontent: "抱歉",
             ),
-            icon: const Icon(Icons.edit),
           ),
         ),
-        SettingsCard(
-          isImportant: false,
-          leadingIcon: const Icon(Icons.login),
-          thistitle: "输入登录信息",
-          thissubtitle: _id != null && _userName != null
-              ? "$_id($_userName) 已登录"
-              : "请先登录",
-          trailingWidget: IconButton.outlined(
-            onPressed: () => showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (builder) => UserDialog(
-                onEditFunction: () => setState(() {}),
-                onSaveFunction: () => setState(() {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("$_userName,欢迎回来!"),
-                      behavior: SnackBarBehavior.floating));
-                }),
-                onErrorFunction: (error) => showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text("出错了"),
-                    content: Text(error.toString().split(":").last),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("返回"),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            icon: const Icon(Icons.edit),
+        const Divider(),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            top: 8,
+            bottom: 8,
+          ),
+          child: Text(
+            "测试设置",
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
         ),
-        SettingsCard(
-          isImportant: false,
-          leadingIcon: const Icon(Icons.gps_fixed),
-          thistitle: "忽略位置信息直接签到",
-          thissubtitle: "仅为本人学习研究",
-          trailingWidget: Switch(
-            value: _switchVirtualQianDao,
-            // onChanged: (value) {
-            //   _switchVirtualQianDao = value;
-            //   setState(() {
-            //     _configDB.encodeBool(
-            //       "switchVirtualQianDao",
-            //       _switchVirtualQianDao,
-            //     );
-            //   });
-            // },
-            onChanged: null,
+        ListTile(
+          leading: const Icon(Icons.location_off),
+          title: const Text("忽略位置信息直接签到"),
+          subtitle: const Text("仅为本人学习研究,打开是需要负责任的"),
+          trailing: Switch(
+            value: _ignorelocation,
+            onChanged: (value) => setState(() {
+              _ignorelocation = value;
+            }),
           ),
-        ),
-        SettingsCard(
-          isImportant: false,
-          leadingIcon: const Icon(Icons.description),
-          thistitle: "关于此应用",
-          thissubtitle: "查看有关许可",
-          trailingWidget: IconButton.outlined(
-            onPressed: () => showLicensePage(
-              context: context,
-              applicationVersion: "0.0.3",
-              applicationLegalese:
-                  "流221汪涛强势出品\n软件包括本人编写的规则基于LGPL协议分发\n可以共同研究，但不许独吞我的成果！\n严禁商用！",
-            ),
-            icon: const Icon(Icons.arrow_forward),
-          ),
+          onTap: () => setState(() {
+            _ignorelocation = !_ignorelocation;
+          }),
         ),
       ],
     );

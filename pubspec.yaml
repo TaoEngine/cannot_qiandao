@@ -20,6 +20,7 @@ dependencies:
   toml: ^0.16.0
   http: ^1.2.2
   permission_handler: ^11.3.1
+  location: ^7.0.1
 
 dev_dependencies:
   flutter_test:

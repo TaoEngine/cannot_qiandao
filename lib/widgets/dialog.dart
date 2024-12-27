@@ -1,81 +1,34 @@
-import 'package:cannot_qiandao/func/plugin.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class URLDialog extends StatefulWidget {
-  final Function onEditFunction;
-
-  /// 规则URL输入弹窗
-  const URLDialog({super.key, required this.onEditFunction});
+  const URLDialog({super.key});
 
   @override
   State<URLDialog> createState() => _URLDialogState();
 }
 
 class _URLDialogState extends State<URLDialog> {
-  /// 规则URL，用于同步签到规则
-  String _sourceURL = "";
-
-  /// 同步规则URL输入框的信息
-  late TextEditingController _urlController;
-
-  /// 签到插件
-  final Plugin plugin = Plugin();
-
-  @override
-  void initState() {
-    super.initState();
-    _sourceURL = "";
-    _urlController = TextEditingController(text: _sourceURL);
-  }
-
-  void _updateSourceURL(String value) {
-    setState(() {
-      _sourceURL = value;
-      widget.onEditFunction();
-    });
-  }
+  static const String infotext =
+      '插件和软件主体是分开的，这样可以灵活应对签到系统突发的更改\n插件将在APP启动时更新一次\n插件由TOML编写，有感兴趣的友友们可以和我一起交流哦！';
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      icon: const Icon(Icons.power),
-      title: const Text('规则URL'),
-      content: const Text(
-          '规则就像插件，和软件主体是分开的，这样可以灵活应对签到系统突发的更改\n规则将在APP启动时更新一次\n规则由TOML编写，有感兴趣的友友们可以和我一起交流哦！'),
+      icon: const Icon(Icons.link),
+      title: const Text('编辑插件URL'),
+      content: const Text(infotext),
       actions: [
-        TextField(
-          controller: _urlController,
+        const TextField(
           keyboardType: TextInputType.url,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
             labelText: '输入存放规则的URL',
           ),
-          onChanged: _updateSourceURL, // 使用更新函数
         ),
         const SizedBox(height: 16),
         TextButton(
-          onPressed: _sourceURL.isEmpty
-              ? null
-              : () {
-                  // 这里可以增加错误处理
-                  if (!Uri.parse(_sourceURL).isAbsolute) {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text("错误"),
-                        content: const Text("请输入有效的URL"),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text("返回"),
-                          ),
-                        ],
-                      ),
-                    );
-                    return;
-                  }
-                  Navigator.pop(context);
-                },
+          onPressed: () {},
           child: const Text('完成'),
         ),
       ],
@@ -84,73 +37,30 @@ class _URLDialogState extends State<URLDialog> {
 }
 
 class UserDialog extends StatefulWidget {
-  final Function onEditFunction;
-  final Function onSaveFunction;
-  final Function onErrorFunction;
-  const UserDialog(
-      {super.key,
-      required this.onEditFunction,
-      required this.onSaveFunction,
-      required this.onErrorFunction});
+  const UserDialog({super.key});
 
   @override
   State<UserDialog> createState() => _UserDialogState();
 }
 
 class _UserDialogState extends State<UserDialog> {
-  /// 正在登录
-  bool _isLogging = false;
-
-  /// 登录的ID
-  String? _userid;
-
-  /// 登录的密码
-  String? _password;
-
-  /// 上一次登录的密码(MD5形式)
-  String? _passwordpast;
-
-  /// 用于显示toml插件的登录提示信息
-  String? _logindescription;
-
-  /// 给登录id的dialog用的
-  TextEditingController _idController = TextEditingController();
-
-  /// 签到插件
-  final Plugin plugin = Plugin();
-
-  @override
-  void initState() {
-    super.initState();
-    try {
-      _idController = TextEditingController(text: _userid);
-    } catch (error) {
-      Navigator.pop(context);
-      widget.onErrorFunction(error);
-    }
-  }
+  static const String infotext =
+      "请先登录考勤系统,然后才能签到\n这里的登录信息将被用于本地获取token\n密码验证时会被转换为MD5编码格式被保存\n密码本体是不会被泄露的请你们放心";
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       icon: const Icon(Icons.login),
       title: const Text('登录签到系统'),
-      content: Text(_logindescription ??
-          "请先登录考勤系统,然后才能签到\n这里的登录信息将被用于本地获取token\n密码验证时会被转换为MD5编码格式被保存\n密码本体是不会被泄露的请你们放心"),
+      content: const Text(infotext),
       actions: [
         TextField(
-          controller: _idController,
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: '学号',
           ),
-          onChanged: (value) {
-            setState(() {
-              _userid = value;
-              widget.onEditFunction();
-            });
-          },
+          onChanged: (value) {},
         ),
         const SizedBox(height: 16),
         TextField(
@@ -161,29 +71,56 @@ class _UserDialogState extends State<UserDialog> {
             labelText: '密码',
           ),
           onChanged: (value) {
-            setState(() {
-              _password = value;
-              widget.onEditFunction();
-            });
+            setState(() {});
           },
         ),
         const SizedBox(height: 16),
         TextButton(
-          onPressed: _userid == null ||
-                  _password == null ||
-                  _userid!.isEmpty ||
-                  _password!.isEmpty ||
-                  _isLogging
-              ? null
-              : () async {
-                  setState(() {
-                    _isLogging = true;
-                  });
-                },
-          child: _isLogging
-              ? const CircularProgressIndicator.adaptive()
-              : const Text("登录"),
+          onPressed: () {},
+          child: const Text("登录"),
         )
+      ],
+    );
+  }
+}
+
+class ErrorDialog extends StatelessWidget {
+  /// 出错信息
+  ///
+  /// 如果向系统发送消息或者回传消息的时候出现一些错误(比如签到系统卡住了,不合规的消息被传出),
+  /// HTTP模块就会返回标准错误
+  ///
+  /// 将标准错误传入此处,出了错误就能及时去处理
+  final String errorcontent;
+
+  /// 出错的弹窗
+  const ErrorDialog({
+    super.key,
+    required this.errorcontent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      icon: const Icon(Icons.error),
+      title: const Text("出错了"),
+      content: Text(errorcontent),
+      actions: [
+        TextButton(
+          onPressed: () => launchUrl(
+            Uri.parse(
+                "https://github.com/TaoEngine/cannot_qiandao/issues/new?labels=bug&title=我的签到APP出现了问题&body=问题是这样的:$errorcontent"),
+          ),
+          child: const Text("向我提问"),
+        ),
+        TextButton(
+          onPressed: () {},
+          child: const Text("重试"),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("关闭"),
+        ),
       ],
     );
   }
