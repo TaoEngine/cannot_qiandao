@@ -27,13 +27,13 @@ method = "GET"
 head = {Content-Type = "application/json;charset=UTF-8", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
 body = {}
 query = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}"}
-expect = {fence_latitude = "data.dormitoryRegisterVO.locationLat", fence_longitude = "data.dormitoryRegisterVO.locationLng"}
+expect = {fence_latitude = "data.dormitoryRegisterVO.locationLat", fence_longitude = "data.dormitoryRegisterVO.locationLng", fence_accuracy = "data.locationAccuracy", task_starttime = "data.signStartTime", task_endtime = "data.signEndTime"}
 
 # 签到API
 [QianDao]
 url = "https://xskq.ahut.edu.cn/api/flySource-yxgl/dormSignRecord/add"
 method = "POST"
-head = {Content-Type = "application/json;charset=UTF-8", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}"}
-body = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}", signTime = "{{nowtime}}", signWeek = "{{nowweek}}", signLat = "{{nowlatitude}}", signLng = "{{nowlongitude}}", locationAccuracy = "{{nowaccuracy}}"}
+head = {Content-Type = "application/json;charset=UTF-8", Authorization = "Basic Zmx5c291cmNlX3dpc2VfYXBwOkRBNzg4YXNkVURqbmFzZF9mbHlzb3VyY2VfZHNkYWREQUlVaXV3cWU=", Flysource-Auth = "bearer {{token}}", Referer = "https://xskq.ahut.edu.cn/wise/pages/ssgl/dormsign?taskId=ec7f0f0fb0f6702f61da122ebf0eb592&autoSign=1&scanSign=0&userId={{userid}}"}
+body = {taskId = "ec7f0f0fb0f6702f61da122ebf0eb592", signDate = "{{nowdate}}", signTime = "{{nowtime}}", signWeek = "{{nowweek}}", signLat = "{{nowlatitude}}", signLng = "{{nowlongitude}}", locationAccuracy = "{{nowaccuracy}}", signType = "0"}
 query = {}
-expect = {success = "data"}
+expect = {success = "msg"}

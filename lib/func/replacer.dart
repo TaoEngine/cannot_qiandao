@@ -22,24 +22,35 @@ Future<Map<String, dynamic>> replacedata({
     if (queryValue.value is String) {
       // 替换字符串中的{{}}内容
       updatedEntryValue[queryValue.key] = queryValue.value
-          .replaceAll("{{userid}}", userid ?? "null")
-          .replaceAll("{{password}}", passwordmd5 ?? "null")
-          .replaceAll("{{token}}", token ?? "null")
+          .replaceAll("{{userid}}", userid ?? "{{userid}}")
+          .replaceAll("{{password}}", passwordmd5 ?? "{{password}}")
+          .replaceAll("{{token}}", token ?? "{{token}}")
           .replaceAll("{{nowdate}}", nowdate)
           .replaceAll("{{nowweek}}", nowweek)
           .replaceAll("{{nowtime}}", nowtime)
-          .replaceAll("{{nowlatitude}}", nowlocation[0])
-          .replaceAll("{{nowlongitude}}", nowlocation[1])
-          .replaceAll("{{nowaccuracy}}", nowlocation[2]);
+          .replaceAll("{{nowlatitude}}", "118.548792")
+          .replaceAll("{{nowlongitude}}", "31.678928")
+          .replaceAll("{{nowaccuracy}}", "30");
+      // .replaceAll("{{nowlatitude}}", nowlocation[0])
+      // .replaceAll("{{nowlongitude}}", nowlocation[1])
+      // .replaceAll("{{nowaccuracy}}", nowlocation[2]);
     } else if (queryValue.value is Map) {
       // 替换Map中的值
       Map<String, String> updatedMapValue = {};
       for (var queryValueEntry in queryValue.value.entries) {
         updatedMapValue[queryValueEntry.key] = queryValueEntry.value
-            .replaceAll("{{userid}}", userid ?? "null")
-            .replaceAll("{{password}}", passwordmd5 ?? "null")
-            .replaceAll("{{token}}", token ?? "null")
-            .replaceAll("{{nowdate}}", "2024-12-18");
+            .replaceAll("{{userid}}", userid ?? "{{userid}}")
+            .replaceAll("{{password}}", passwordmd5 ?? "{{password}}")
+            .replaceAll("{{token}}", token ?? "{{token}}")
+            .replaceAll("{{nowdate}}", nowdate)
+            .replaceAll("{{nowweek}}", nowweek)
+            .replaceAll("{{nowtime}}", nowtime)
+            .replaceAll("{{nowlatitude}}", "118.548792")
+            .replaceAll("{{nowlongitude}}", "31.678928")
+            .replaceAll("{{nowaccuracy}}", "30");
+        // .replaceAll("{{nowlatitude}}", nowlocation[0])
+        // .replaceAll("{{nowlongitude}}", nowlocation[1])
+        // .replaceAll("{{nowaccuracy}}", nowlocation[2]);
       }
       updatedEntryValue[queryValue.key] = updatedMapValue;
     }
