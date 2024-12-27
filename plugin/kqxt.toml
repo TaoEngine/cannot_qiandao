@@ -1,5 +1,5 @@
 title = "安工大晚寝签到插件"
-author = "流221汪涛"
+author = "TaoEngine"
 logindescription = "安工大的考勤系统密码默认为Ahgydx@920，没改过密码就填这个"
 
 # 获取签到操作所需的用户凭证Token
