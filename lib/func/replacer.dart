@@ -28,12 +28,12 @@ Future<Map<String, dynamic>> replacedata({
           .replaceAll("{{nowdate}}", nowdate)
           .replaceAll("{{nowweek}}", nowweek)
           .replaceAll("{{nowtime}}", nowtime)
-          .replaceAll("{{nowlatitude}}", "118.548792")
-          .replaceAll("{{nowlongitude}}", "31.678928")
-          .replaceAll("{{nowaccuracy}}", "30");
-      // .replaceAll("{{nowlatitude}}", nowlocation[0])
-      // .replaceAll("{{nowlongitude}}", nowlocation[1])
-      // .replaceAll("{{nowaccuracy}}", nowlocation[2]);
+          // .replaceAll("{{nowlatitude}}", "118.548792")
+          // .replaceAll("{{nowlongitude}}", "31.678928")
+          // .replaceAll("{{nowaccuracy}}", "30");
+          .replaceAll("{{nowlatitude}}", nowlocation[0])
+          .replaceAll("{{nowlongitude}}", nowlocation[1])
+          .replaceAll("{{nowaccuracy}}", nowlocation[2]);
     } else if (queryValue.value is Map) {
       // 替换Map中的值
       Map<String, String> updatedMapValue = {};
@@ -45,12 +45,12 @@ Future<Map<String, dynamic>> replacedata({
             .replaceAll("{{nowdate}}", nowdate)
             .replaceAll("{{nowweek}}", nowweek)
             .replaceAll("{{nowtime}}", nowtime)
-            .replaceAll("{{nowlatitude}}", "118.548792")
-            .replaceAll("{{nowlongitude}}", "31.678928")
-            .replaceAll("{{nowaccuracy}}", "30");
-        // .replaceAll("{{nowlatitude}}", nowlocation[0])
-        // .replaceAll("{{nowlongitude}}", nowlocation[1])
-        // .replaceAll("{{nowaccuracy}}", nowlocation[2]);
+            // .replaceAll("{{nowlatitude}}", "118.548792")
+            // .replaceAll("{{nowlongitude}}", "31.678928")
+            // .replaceAll("{{nowaccuracy}}", "30");
+            .replaceAll("{{nowlatitude}}", nowlocation[0])
+            .replaceAll("{{nowlongitude}}", nowlocation[1])
+            .replaceAll("{{nowaccuracy}}", nowlocation[2]);
       }
       updatedEntryValue[queryValue.key] = updatedMapValue;
     }

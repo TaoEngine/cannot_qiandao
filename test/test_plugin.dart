@@ -1,6 +1,6 @@
 import 'package:cannot_qiandao/func/requests.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cannot_qiandao/func/pluginnew.dart';
+import 'package:cannot_qiandao/func/plugin.dart';
 
 void main() async {
   final plugin = QiandaoPlugin();
