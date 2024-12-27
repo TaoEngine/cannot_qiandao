@@ -84,6 +84,25 @@ class _UserDialogState extends State<UserDialog> {
   }
 }
 
+class EditDialog extends StatefulWidget {
+  const EditDialog({super.key});
+
+  @override
+  State<EditDialog> createState() => _EditDialogState();
+}
+
+class _EditDialogState extends State<EditDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return const AlertDialog(
+      icon: Icon(Icons.edit),
+      title: Text("编辑用户"),
+      content: Text("多人签到还没做好,敬请期待哈"),
+      actions: [],
+    );
+  }
+}
+
 class ErrorDialog extends StatelessWidget {
   /// 出错信息
   ///

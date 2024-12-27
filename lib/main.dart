@@ -75,7 +75,10 @@ class _MainPageState extends State<MainPage> {
           ),
           // 编辑按钮
           IconButton(
-            onPressed: () {},
+            onPressed: () => showDialog(
+              context: context,
+              builder: (builder) => const EditDialog(),
+            ),
             icon: const Icon(Icons.edit),
             tooltip: "编辑",
           ),
