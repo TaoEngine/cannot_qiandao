@@ -26,6 +26,9 @@ class UserDB {
   /// 登录用户学号
   String? userid;
 
+  /// 登录用户姓名
+  String? username;
+
   /// 登录用户密码md5
   String? passwordmd5;
 }

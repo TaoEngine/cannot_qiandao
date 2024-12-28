@@ -36,12 +36,21 @@ class HttpUtil {
       queryParameters: query,
     );
 
+    final Object? bodyEncoded;
+
+    // 鉴别body是否要以json方式进行传递
+    if (headers!["Content-Type"]!.contains("json")) {
+      bodyEncoded = json.encode(body);
+    } else {
+      bodyEncoded = body;
+    }
+
     Map<String, String> response = {};
     try {
       // 2. 发起HTTP请求
       final responseRaw = await (method == HttpMethod.methodGET
               ? http.get(queryURL, headers: headers)
-              : http.post(queryURL, headers: headers, body: body))
+              : http.post(queryURL, headers: headers, body: bodyEncoded))
           .timeout(const Duration(seconds: 10));
 
       // 3. 检查响应状态码
