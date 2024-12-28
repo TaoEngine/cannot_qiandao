@@ -14,7 +14,7 @@ class _QiandaoPageState extends State<QiandaoPage> {
     return ListView(
       children: const [
         QiandaoCard(
-          userid: "229094246",
+          userid: "22909XXXX",
           username: "汪涛",
           qiandaoState: QiandaoState.notQiandao,
         ),

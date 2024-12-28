@@ -9,9 +9,10 @@ void main() async {
     expect(plugin.islogin, true);
     var aa = plugin.getuserinfo();
     print(aa);
-    var bb = await plugin.getstate();
-    print(bb);
     var cc = await plugin.gettask();
     print(cc);
+    await plugin.qiandao();
+    var bb = await plugin.getstate();
+    print(bb);
   });
 }

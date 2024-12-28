@@ -64,6 +64,7 @@ class QiandaoCard extends StatelessWidget {
           trailing: IconButton.filledTonal(
             onPressed: () {},
             icon: const Icon(Icons.task_alt),
+            tooltip: "去签到",
           ),
         ),
       ),

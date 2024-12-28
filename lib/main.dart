@@ -1,3 +1,4 @@
+import 'package:cannot_qiandao/func/plugin.dart';
 import 'package:cannot_qiandao/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +18,8 @@ void main() async {
     ),
   );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  QiandaoPlugin initplugin = QiandaoPlugin();
+  await initplugin.init();
   runApp(const MainAPP());
 }
 

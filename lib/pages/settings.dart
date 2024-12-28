@@ -31,8 +31,6 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  bool _ignorelocation = false;
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -59,41 +57,13 @@ class _SettingsViewState extends State<SettingsView> {
         ),
         ListTile(
           leading: const Icon(Icons.link),
-          title: const Text("编辑签到插件的URL"),
+          title: const Text("编辑签到插件URL"),
           subtitle: const Text("签到的核心就靠它了!"),
           onTap: () => showDialog(
             context: context,
             barrierDismissible: false,
-            builder: (builder) => const ErrorDialog(
-              errorcontent: "抱歉",
-            ),
+            builder: (builder) => const URLDialog(),
           ),
-        ),
-        const Divider(),
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 20,
-            top: 8,
-            bottom: 8,
-          ),
-          child: Text(
-            "测试设置",
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
-          ),
-        ),
-        ListTile(
-          leading: const Icon(Icons.location_off),
-          title: const Text("忽略位置信息直接签到"),
-          subtitle: const Text("仅为本人学习研究,打开是需要负责任的"),
-          trailing: Switch(
-            value: _ignorelocation,
-            onChanged: (value) => setState(() {
-              _ignorelocation = value;
-            }),
-          ),
-          onTap: () => setState(() {
-            _ignorelocation = !_ignorelocation;
-          }),
         ),
       ],
     );

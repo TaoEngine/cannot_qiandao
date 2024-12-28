@@ -1,5 +1,8 @@
+import 'package:cannot_qiandao/func/plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+part '../controller/dialog.dart';
 
 class URLDialog extends StatefulWidget {
   const URLDialog({super.key});
@@ -10,22 +13,36 @@ class URLDialog extends StatefulWidget {
 
 class _URLDialogState extends State<URLDialog> {
   static const String infotext =
-      '插件和软件主体是分开的，这样可以灵活应对签到系统突发的更改\n插件将在APP启动时更新一次\n插件由TOML编写，有感兴趣的友友们可以和我一起交流哦！';
+      "插件和软件主体是分开的，这样我就可以灵活应对签到系统突发的更改拉!\n插件将在APP启动时更新一次\n插件由TOML编写,有感兴趣的友友们可以和我一起交流哈!";
+
+  String _url = "";
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       icon: const Icon(Icons.link),
       title: const Text('编辑插件URL'),
-      content: const Text(infotext),
-      actions: [
-        const TextField(
-          keyboardType: TextInputType.url,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: '输入存放规则的URL',
-          ),
+      content: SizedBox(
+        height: 180,
+        child: Column(
+          children: [
+            const Text(infotext),
+            const Divider(),
+            const SizedBox(height: 6),
+            TextField(
+              keyboardType: TextInputType.url,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '输入存放规则的URL',
+              ),
+              onChanged: (value) {
+                _url = value;
+              },
+            ),
+          ],
         ),
+      ),
+      actions: [
         const SizedBox(height: 16),
         TextButton(
           onPressed: () {},
@@ -45,38 +62,70 @@ class UserDialog extends StatefulWidget {
 
 class _UserDialogState extends State<UserDialog> {
   static const String infotext =
-      "请先登录考勤系统,然后才能签到\n这里的登录信息将被用于本地获取token\n密码验证时会被转换为MD5编码格式被保存\n密码本体是不会被泄露的请你们放心";
+      "签到的前提是你登录了考勤系统\n这里的登录信息将被用于本地获取token\n密码验证时会被转换为MD5编码格式被保存\n密码本体是不会被泄露的请你们放心";
+
+  String _userid = "";
+
+  String _password = "";
+
+  bool _islogging = false;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       icon: const Icon(Icons.login),
       title: const Text('登录签到系统'),
-      content: const Text(infotext),
+      content: SizedBox(
+        height: 230,
+        child: Column(
+          children: [
+            const Text(infotext),
+            const Divider(),
+            const SizedBox(height: 6),
+            TextField(
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '学号',
+              ),
+              onChanged: (value) {
+                _userid = value;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              obscureText: true,
+              keyboardType: TextInputType.visiblePassword,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '密码',
+              ),
+              onChanged: (value) {
+                _password = value;
+              },
+            ),
+          ],
+        ),
+      ),
       actions: [
-        TextField(
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: '学号',
-          ),
-          onChanged: (value) {},
-        ),
-        const SizedBox(height: 16),
-        TextField(
-          obscureText: true,
-          keyboardType: TextInputType.visiblePassword,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: '密码',
-          ),
-          onChanged: (value) {
-            setState(() {});
-          },
-        ),
-        const SizedBox(height: 16),
         TextButton(
-          onPressed: () {},
+          onPressed: () => Navigator.pop(context),
+          child: const Text("取消"),
+        ),
+        TextButton(
+          onPressed: () => loginWithPlugin(
+            userid: _userid,
+            password: _password,
+            onrun: () {},
+            oncallback: () {
+              Navigator.pop(context);
+            },
+            onerror: (error) => showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => ErrorDialog(errorcontent: error),
+            ),
+          ),
           child: const Text("登录"),
         )
       ],
