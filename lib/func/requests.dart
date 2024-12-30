@@ -98,7 +98,7 @@ class HttpUtil {
         }
       } else {
         throw Exception(
-            "服务器返回了一个${responseRaw.statusCode}错误,问题是${responseRaw.body},要不检查一下?");
+            "服务器返回了一个${responseRaw.statusCode}错误,要不检查一下?\n问题是${responseRaw.body}");
       }
     } on SocketException {
       throw Exception("连接不上网址,稍后再试试看");

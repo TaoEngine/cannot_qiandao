@@ -1,6 +1,7 @@
-import 'package:cannot_qiandao/func/plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:cannot_qiandao/func/plugin.dart';
 
 part '../controller/dialog.dart';
 
@@ -76,7 +77,7 @@ class _UserDialogState extends State<UserDialog> {
       icon: const Icon(Icons.login),
       title: const Text('登录签到系统'),
       content: SizedBox(
-        height: 230,
+        height: 240,
         child: Column(
           children: [
             const Text(infotext),
@@ -161,10 +162,18 @@ class ErrorDialog extends StatelessWidget {
   /// 将标准错误传入此处,出了错误就能及时去处理
   final String errorcontent;
 
+  /// 重试按钮
+  final VoidCallback? onretry;
+
+  /// 关闭按钮
+  final VoidCallback? onexit;
+
   /// 出错的弹窗
   const ErrorDialog({
     super.key,
     required this.errorcontent,
+    this.onretry,
+    this.onexit,
   });
 
   @override
@@ -172,21 +181,28 @@ class ErrorDialog extends StatelessWidget {
     return AlertDialog(
       icon: const Icon(Icons.error),
       title: const Text("出错了"),
-      content: Text(errorcontent),
+      content: SingleChildScrollView(
+        child: Text(errorcontent),
+      ),
       actions: [
         TextButton(
           onPressed: () => launchUrl(
             Uri.parse(
-                "https://github.com/TaoEngine/cannot_qiandao/issues/new?labels=bug&title=我的签到APP出现了问题&body=问题是这样的:$errorcontent"),
+                "https://github.com/TaoEngine/cannot_qiandao/issues/new?labels=bug&title=我的签到APP出现了问题&body=$errorcontent"),
           ),
           child: const Text("向我提问"),
         ),
+        onretry != null
+            ? TextButton(
+                onPressed: () => onretry,
+                child: const Text("重试"),
+              )
+            : const SizedBox(),
         TextButton(
-          onPressed: () {},
-          child: const Text("重试"),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            onexit;
+            Navigator.pop(context);
+          },
           child: const Text("关闭"),
         ),
       ],

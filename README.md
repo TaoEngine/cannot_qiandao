@@ -1,3 +1,6 @@
+> [!WARNING]
+> 由于安工大校园考勤加入了证书鉴权步骤,目前暂时破解不了,此项目暂停开发,如果有破解出来的朋友们赶紧戳我!
+
 <div style="text-align: center; margin: 0 auto;">
 
 # 没必要签到

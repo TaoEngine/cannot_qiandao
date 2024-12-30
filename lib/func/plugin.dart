@@ -321,7 +321,7 @@ class QiandaoPlugin {
   }
 
   // 获取签到状态
-  Future getstate() async {
+  Future<bool> getstate() async {
     if (!islogin) {
       throw Exception("请先登录!");
     }
@@ -365,7 +365,7 @@ class QiandaoPlugin {
   }
 
   // 获取签到状态
-  Future gettask() async {
+  Future<Map<String, dynamic>> gettask() async {
     if (!islogin) {
       throw Exception("请先登录!");
     }

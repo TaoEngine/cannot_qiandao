@@ -11,7 +11,7 @@ void main() async {
     print(aa);
     var cc = await plugin.gettask();
     print(cc);
-    await plugin.qiandao();
+    // await plugin.qiandao();
     var bb = await plugin.getstate();
     print(bb);
   });
